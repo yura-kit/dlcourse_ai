@@ -22,7 +22,6 @@ def check_gradient(f, x, delta=1e-5, tol = 1e-4):
     orig_x = x.copy()
     fx, analytic_grad = f(x)
     assert np.all(np.isclose(orig_x, x, tol)), "Functions shouldn't modify input variables"
-    print(analytic_grad.shape, x.shape)
     assert analytic_grad.shape == x.shape
     #http://qaru.site/questions/15290759/implementing-a-naive-gradient-descent-check-using-numpy
     # We will go through every dimension of x and compute numeric
