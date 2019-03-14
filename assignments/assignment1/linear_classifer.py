@@ -40,7 +40,10 @@ def cross_entropy_loss(probs, target_index):
     # print("target inside ces", target_index)
     px = np.zeros_like(probs)
     #print("PX", probs)
-    px[:,target_index] = 1.
+    for row in range(px.shape[0]):
+        px[row,target_index[row]] = 1.
+    #px[:,target_index] = 1.
+    #print(px)
     qx = probs
 
 
@@ -97,7 +100,8 @@ def softmax_with_cross_entropy(predictions, target_index):
     real1 = np.zeros_like(predictions)
     #print("REAL1 BEFORE ",real1)
     #print("TARGET", target_index)
-    real1[:,target_index] = 1.
+    for row in range(real1.shape[0]):
+        real1[row,target_index[row]] = 1.
     #print("REAL1 APPLIED",real1)
 
     der = sft_max - real1
