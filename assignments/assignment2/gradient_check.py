@@ -1,6 +1,8 @@
 import numpy as np
 
-
+CRED = '\033[91m'
+CGREN = '\033[42m'
+CEND = '\033[0m'
 def check_gradient(f, x, delta=1e-5, tol=1e-4):
     """
     Checks the implementation of analytical gradient by comparing
@@ -20,7 +22,8 @@ def check_gradient(f, x, delta=1e-5, tol=1e-4):
 
     fx, analytic_grad = f(x)
 
-    assert analytic_grad.shape == x.shape
+
+    assert analytic_grad.shape == x.shape, (analytic_grad.shape, x.shape)
 
     it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
     while not it.finished:
@@ -29,16 +32,23 @@ def check_gradient(f, x, delta=1e-5, tol=1e-4):
         numeric_grad_at_ix = 0
 
         # TODO Copy from previous assignment
-        raise Exception("Not implemented!")
+        x_plus_h = x.copy()
+        x_minus_h = x.copy()
+
+        x_plus_h[ix] += delta
+        x_minus_h[ix] -= delta
+        #print("X -", x_minus_h)
+        #print("X +", x_plus_h)
+        numeric_grad_at_ix = (f(x_plus_h)[0] - f(x_minus_h)[0])/(2.*delta)
 
         if not np.isclose(numeric_grad_at_ix, analytic_grad_at_ix, tol):
-            print("Gradients are different at %s. Analytic: %2.5f, Numeric: %2.5f" % (
-                  ix, analytic_grad_at_ix, numeric_grad_at_ix))
+            print(CRED + "Gradients are different at %s. Analytic: %2.5f, Numeric: %2.5f" % (
+                  ix, analytic_grad_at_ix, numeric_grad_at_ix) + CEND)
             return False
 
         it.iternext()
 
-    print("Gradient check passed!")
+    print(CGREN+ "Gradient check passed!" + CEND)
     return True
 
 
@@ -56,6 +66,7 @@ def check_layer_gradient(layer, x, delta=1e-5, tol=1e-4):
       bool indicating whether gradients match or not
     """
     output = layer.forward(x)
+    #print("OUTPUT", output)
     output_weight = np.random.randn(*output.shape)
 
     def helper_func(x):
